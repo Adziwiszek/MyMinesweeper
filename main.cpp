@@ -2,12 +2,11 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Minesweeper");
 
     while (window.isOpen())
     {
+        //handling input
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -15,8 +14,8 @@ int main()
                 window.close();
         }
 
+        //drawing stuff
         window.clear();
-        window.draw(shape);
         window.display();
     }
 
