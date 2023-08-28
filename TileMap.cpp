@@ -5,18 +5,29 @@
 
 using namespace std;
 
-//public
-
-TileMap::TileMap(unsigned int lvlSize, sf::Texture tTexture)
+//Tile class
+Tile::Tile()
 {
-        vector<int> row(lvlSize, 0);
-        tiles = vector<vector<int>>(lvlSize, row);
-        numOfBombs = ceil(lvlSize * lvlSize * 0.2);
-        this->lvlSize = lvlSize;
-        tileTexture = tTexture;
+    isCovered = true;
+    isBomb = false;
+    textureStatus = 0;
+    bombsAround = 0;
 }
 
-bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize, vector <vector<int>> new_tiles, unsigned int width, unsigned int height, sf::Vector2f startingPos/* = sf::Vector2f(0.f, 0.f)*/)
+//public
+TileMap::TileMap(unsigned int lvlSize, sf::Texture tTexture)
+{
+    Tile mT;
+    vector<Tile> row(lvlSize, mT);
+    tiles = vector<vector<Tile>>(lvlSize, row);
+
+    numOfBombs = ceil(lvlSize * lvlSize * 0.2);
+    this->lvlSize = lvlSize;
+    tileTexture = tTexture;
+}
+
+bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize, vector <vector<Tile>> new_tiles,
+    unsigned int width, unsigned int height, sf::Vector2f startingPos/* = sf::Vector2f(0.f, 0.f)*/)
 {
     // load the tileset texture
     if (!m_tileset.loadFromFile(tileset))
@@ -31,7 +42,7 @@ bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize, vector <ve
         for (unsigned int j = 0; j < height; ++j)
         {
             // get the current tile number
-            int tileNumber = new_tiles[i][j];
+            int tileNumber = new_tiles[i][j].textureStatus;
 
             // find its position in the tileset texture
             int tu = tileNumber % (m_tileset.getSize().x / tileSize.x);
@@ -80,7 +91,7 @@ void TileMap::input(sf::Vector2i mousePos)
         {
             if (mouseIsInTile(mousePos, sf::Vector2f(j*64, i*64 + 100), 64))
             {
-                tiles[j][i] = 1;
+                tiles[j][i].textureStatus = 1;
             }
         }
     }
@@ -88,7 +99,7 @@ void TileMap::input(sf::Vector2i mousePos)
         
 }
 
-vector <vector<int>> TileMap::getTiles()
+vector <vector<Tile>> TileMap::getTiles()
 {
     return tiles;
 }

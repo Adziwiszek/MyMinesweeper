@@ -9,18 +9,33 @@
 
 using namespace std;
 
+class Tile
+{
+public:
+    Tile();
+    bool isCovered;
+    bool isBomb;
+    // 0 - covered 
+    // 1 - uncovered
+    // 3 - bomb
+    int textureStatus;
+    unsigned int bombsAround;
+};
+
+
 class TileMap : public sf::Drawable, sf::Transformable
 {
 public:
+    TileMap();
     TileMap(unsigned int lvlSize, sf::Texture tTexture);
 
     //loads map and setups it
-    bool load(const std::string& tileset, sf::Vector2u tileSize, vector <vector<int>> new_tiles,
+    bool load(const std::string& tileset, sf::Vector2u tileSize, vector <vector<Tile>> new_tiles,
         unsigned int width, unsigned int height, sf::Vector2f startingPos/* = sf::Vector2f(0.f, 0.f)*/);
 
     void input(sf::Vector2i mousePos);
 
-    vector <vector<int>> getTiles();
+    vector <vector<Tile>> getTiles();
 
 private:
 
@@ -28,7 +43,8 @@ private:
 
     sf::VertexArray m_vertices;
     sf::Texture m_tileset;
-    vector<vector<int>> tiles;
+    //vector<vector<int>> tiles;
+    vector<vector<Tile>> tiles;
     int numOfBombs;
     unsigned int lvlSize;
     sf::Texture tileTexture;
