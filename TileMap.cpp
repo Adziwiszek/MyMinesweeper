@@ -1,7 +1,10 @@
 #include "TileMap.h" 
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <iostream>
 #include <vector>
+#include <cstdlib>
+#include <time.h>
 
 using namespace std;
 
@@ -24,6 +27,24 @@ TileMap::TileMap(unsigned int lvlSize, sf::Texture tTexture)
     numOfBombs = ceil(lvlSize * lvlSize * 0.2);
     this->lvlSize = lvlSize;
     tileTexture = tTexture;
+}
+
+void TileMap::createBombs(int nBombs)
+{
+    srand(time(NULL));
+    bombsPos.clear();
+    vector<int> possiblePlaces;
+    for (int i = 0; i < lvlSize * lvlSize; i++) 
+        possiblePlaces.push_back(i);
+
+    while (numOfBombs > 0)
+    {
+        int x = rand() % possiblePlaces.size();
+        //bombsPos.push_back(x);
+        tiles[x % lvlSize][x / lvlSize].isBomb = true;
+        possiblePlaces.erase(possiblePlaces.begin() + x);
+        numOfBombs--;
+    }
 }
 
 bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize, vector <vector<Tile>> new_tiles,
@@ -91,7 +112,14 @@ void TileMap::input(sf::Vector2i mousePos)
         {
             if (mouseIsInTile(mousePos, sf::Vector2f(j*64, i*64 + 100), 64))
             {
-                tiles[j][i].textureStatus = 1;
+                if (tiles[j][i].isBomb)
+                {
+                    tiles[j][i].textureStatus = 2;
+                }
+                else
+                {
+                    tiles[j][i].textureStatus = 1;
+                }
             }
         }
     }
