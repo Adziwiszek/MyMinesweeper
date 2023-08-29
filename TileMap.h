@@ -21,6 +21,7 @@ public:
     // 2 - bomb
     int textureStatus;
     unsigned int bombsAround;
+    sf::Text bombsAroundText;
 };
 
 
@@ -37,23 +38,35 @@ public:
     bool load(const std::string& tileset, sf::Vector2u tileSize, vector <vector<Tile>> new_tiles,
         unsigned int width, unsigned int height, sf::Vector2f startingPos/* = sf::Vector2f(0.f, 0.f)*/);
 
+    void uncoverWholeMap();
+
     //dealing with user input
     void input(sf::Vector2i mousePos);
 
     vector <vector<Tile>> getTiles();
 
+    void drawText(sf::RenderWindow& window);
+
+    vector<vector<Tile>> tiles;
 private:
 
+    //TODO
+    // 1) add numbers to tiles around 
+    // 2) add uncovering tiles
+    // 3) add game ending condiitons
+    void setTilesNumbers();
+    void uncoverTiles() {};
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     sf::VertexArray m_vertices;
     sf::Texture m_tileset;
     //vector<vector<int>> tiles;
-    vector<vector<Tile>> tiles;
+    
     vector<int> bombsPos;
     int numOfBombs;
     unsigned int lvlSize;
     sf::Texture tileTexture;
+    sf::Font tileFont;
 };
 
 #endif
