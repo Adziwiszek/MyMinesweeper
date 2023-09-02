@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -17,23 +18,25 @@ int main()
         return -1;
     }
 
-    //setting up tile map
+    ////setting up tile map
     const int lvlSize = 10;
     TileMap tile_map(lvlSize, tileTexture);
     tile_map.load("tile.png", sf::Vector2u(64, 64), tile_map.getTiles(), lvlSize, lvlSize, sf::Vector2f(0.f, 100.f));
     tile_map.createBombs(10);
     tile_map.uncoverWholeMap();
 
-    //sf::Font fot;
-    //fot.loadFromFile("Poppins-Regular.ttf");
-    //sf::Text t1;
-    //t1.setString("asd");
-    //t1.setFont(fot);
-    //t1.setColor(sf::Color::Red);
-    //t1.setPosition(sf::Vector2f(0, 0));
-    //t1.setCharacterSize(24);
-    //t1.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    //sf::Font font;
+    //if (!font.loadFromFile("ArialTh.ttf"))
+    //{
+    //    // error handling...
+    //}
 
+    //sf::Text text;
+    //text.setFont(font);
+    //text.setString("Hello world");
+    //text.setCharacterSize(24);
+    //text.setFillColor(sf::Color::Red);
+    //text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
     while (window.isOpen())
     {
@@ -58,7 +61,7 @@ int main()
         //drawing stuff
         window.clear();
         window.draw(tile_map);
-        //window.draw(t1);
+        //window.draw(text);
         /*for (int i = 0; i < lvlSize; i++)
         {
             for (int j = 0; j < lvlSize; j++)
