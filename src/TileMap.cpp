@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstdlib>
 #include <time.h>
+#include <queue>
 
 using namespace std;
 
@@ -126,6 +127,44 @@ void TileMap::uncoverWholeMap()
     }
 }
 
+void TileMap::uncoverMapAfterClick(sf::Vector2f clickedTile)
+{
+    //queue with tiles that will be uncovered
+    //new tiles that are added are neighbours of some previous tile and have bombsAround = 0
+    queue<pair<int, int>> toUncover;
+    toUncover.push(make_pair(clickedTile.x, clickedTile.y));
+    vector<vector<bool>> checkedTiles = vector<vector<bool>>(lvlSize, vector<bool>(lvlSize, false));
+
+    while (!toUncover.empty())
+    {
+        int x = toUncover.front().first;
+        int y = toUncover.front().second;
+        toUncover.pop();
+
+        checkedTiles[x][y] = true;
+        tiles[x][y].isCovered = false;
+        tiles[x][y].textureStatus = 1;
+        //checking right and left
+        if (x < lvlSize - 1 && !tiles[x + 1][y].isBomb && !checkedTiles[x + 1][y] && tiles[x][y].bombsAround == 0)
+        {
+            toUncover.push(make_pair(x + 1, y));
+        }
+        if (x > 0 && !tiles[x - 1][y].isBomb && !checkedTiles[x - 1][y] && tiles[x][y].bombsAround == 0)
+        {
+            toUncover.push(make_pair(x - 1, y));
+        }
+        //checking top and down
+        if (y < lvlSize - 1 && !tiles[x][y + 1].isBomb && !checkedTiles[x][y + 1] && tiles[x][y].bombsAround == 0)
+        {
+            toUncover.push(make_pair(x, y + 1));
+        }
+        if (y > 0 && !tiles[x][y - 1].isBomb && !checkedTiles[x][y - 1] && tiles[x][y].bombsAround == 0)
+        {
+            toUncover.push(make_pair(x, y - 1));
+        }
+    }
+}
+
 void TileMap::input(sf::Vector2i mousePos)
 {
     auto mouseIsInTile = [](sf::Vector2i mPos, sf::Vector2f tPos, float len) -> bool
@@ -154,7 +193,8 @@ void TileMap::input(sf::Vector2i mousePos)
                 {
                     std::cout << "BOMBS AROUND: " << tiles[j][i].bombsAround << std::endl;
                     tiles[j][i].textureStatus = 1;
-                    tiles[j][i].isCovered = false;
+                    uncoverMapAfterClick(sf::Vector2f(j, i));
+                    //tiles[j][i].isCovered = false;
 
                 }
             }
