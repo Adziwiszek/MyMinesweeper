@@ -18,26 +18,11 @@ int main()
         return -1;
     }
 
-    ////setting up tile map
+    //setting up tile map
     const int lvlSize = 10;
     TileMap tile_map(lvlSize, tileTexture);
     tile_map.load("tile.png", sf::Vector2u(64, 64), tile_map.getTiles(), lvlSize, lvlSize, sf::Vector2f(0.f, 100.f));
-    tile_map.createBombs(10);
-    //tile_map.uncoverWholeMap();
-
-    //sf::Font font;
-    //if (!font.loadFromFile("ArialTh.ttf"))
-    //{
-    //    // error handling...
-    //}
-
-    //sf::Text text;
-    //text.setFont(font);
-    //text.setString("Hello world");
-    //text.setPosition(sf::Vector2f(0.f, 0.f));
-    //text.setCharacterSize(24);
-    //text.setFillColor(sf::Color::Red);
-    //text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    tile_map.createBombs(16);
 
     while (window.isOpen())
     {
@@ -62,14 +47,6 @@ int main()
         //drawing stuff
         window.clear();
         window.draw(tile_map);
-        //window.draw(text);
-        /*for (int i = 0; i < lvlSize; i++)
-        {
-            for (int j = 0; j < lvlSize; j++)
-            {
-                window.draw(tile_map.tiles[i][j].bombsAroundText);
-            }
-        }*/
         tile_map.drawText(window);
         window.display();
     }

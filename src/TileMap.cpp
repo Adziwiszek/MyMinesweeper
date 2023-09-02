@@ -43,10 +43,9 @@ void TileMap::createBombs(int nBombs)
     for (int i = 0; i < lvlSize * lvlSize; i++)
     {
         possiblePlaces.push_back(i);
-        //cout << possiblePlaces[i] << endl;
     }
         
-    while (numOfBombs > 0)
+    while (nBombs > 0)
     {
         int x = rand() % possiblePlaces.size();
         if (possiblePlaces[x] == 0) 
@@ -56,13 +55,11 @@ void TileMap::createBombs(int nBombs)
         bombsPos.push_back(x);
         tiles[x % lvlSize][x / lvlSize].isBomb = true;
         possiblePlaces[x] = 0;
-        numOfBombs--;
+        nBombs--;
     }
 
     setTilesNumbers();
 }
-
-
 
 bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize, vector <vector<Tile>> new_tiles,
     unsigned int width, unsigned int height, sf::Vector2f startingPos/* = sf::Vector2f(0.f, 0.f)*/)
@@ -194,8 +191,6 @@ void TileMap::input(sf::Vector2i mousePos)
                     std::cout << "BOMBS AROUND: " << tiles[j][i].bombsAround << std::endl;
                     tiles[j][i].textureStatus = 1;
                     uncoverMapAfterClick(sf::Vector2f(j, i));
-                    //tiles[j][i].isCovered = false;
-
                 }
             }
         }
@@ -215,7 +210,7 @@ void TileMap::drawText(sf::RenderWindow& window)
     {
         for (unsigned int j = 0; j < lvlSize; ++j)
         {
-            if (tiles[i][j].textureStatus != 0 && !tiles[i][j].isBomb && !tiles[i][j].isCovered)
+            if (tiles[i][j].textureStatus != 0 && !tiles[i][j].isBomb && !tiles[i][j].isCovered && tiles[i][j].bombsAround > 0)
             {
                 window.draw(tiles[i][j].numOfBombsAroundText);
             }          
@@ -281,13 +276,25 @@ void TileMap::setTilesNumbers()
         {
             tiles[i][j].numOfBombsAroundText.setFont(tileFont);
             tiles[i][j].numOfBombsAroundText.setString(to_string(tiles[i][j].bombsAround));
-            //tiles[i][j].numOfBombsAroundText.setString("0");
-            tiles[i][j].numOfBombsAroundText.setCharacterSize(32);
-            tiles[i][j].numOfBombsAroundText.setFillColor(sf::Color::Red);
-            tiles[i][j].numOfBombsAroundText.setPosition(sf::Vector2f(i * 64.f + 20, j * 64.f + 100 + 14));
+            tiles[i][j].numOfBombsAroundText.setCharacterSize(36);
+            tiles[i][j].numOfBombsAroundText.setFillColor(getTileColor(tiles[i][j].bombsAround));
+            tiles[i][j].numOfBombsAroundText.setPosition(sf::Vector2f(i * 64.f + 22, j * 64.f + 100 + 14));
+            tiles[i][j].numOfBombsAroundText.setStyle(sf::Text::Bold);
         }
     }
 
+}
+
+sf::Color TileMap::getTileColor(int nBombs)
+{
+    if (nBombs < 1) return sf::Color::Black;
+
+    if (nBombs == 1) return sf::Color(0, 20, 255);
+    if (nBombs == 2) return sf::Color(0, 102, 0);
+    if (nBombs == 3) return sf::Color(255, 0, 0);
+    if (nBombs == 4) return sf::Color(0, 0, 102);
+    if (nBombs == 5) return sf::Color(153, 0, 0);
+    return sf::Color::Red;
 }
 
 void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -300,17 +307,5 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
     // draw the vertex array
     target.draw(m_vertices, states);
-
-    ////draw numbers of bombs around a tile
-    //for (auto i : tiles)
-    //{
-    //    for (auto j : i)
-    //    {
-    //        if (j.textureStatus != 0 && !j.isBomb)
-    //        {
-    //            target.draw(j.bombsAroundText);
-    //        }
-    //    }
-    //}
 }
 

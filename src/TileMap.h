@@ -53,6 +53,7 @@ public:
 private:
     void setTilesNumbers();
     void uncoverTiles() {};
+    sf::Color getTileColor(int nBombs);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     sf::VertexArray m_vertices;
