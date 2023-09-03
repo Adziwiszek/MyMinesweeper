@@ -12,17 +12,15 @@ int main()
     sf::RenderWindow window(sf::VideoMode(640, 740), "Minesweeper");
 
     bool leftMousePressed = false;
-    sf::Texture tileTexture;
-    if (!tileTexture.loadFromFile("tile.png"))
-    {
-        return -1;
-    }
 
     //setting up tile map
     const int lvlSize = 10;
-    TileMap tile_map(lvlSize, tileTexture);
-    tile_map.load("tile.png", sf::Vector2u(64, 64), tile_map.getTiles(), lvlSize, lvlSize, sf::Vector2f(0.f, 100.f));
-    tile_map.createBombs(16);
+    TileMap tile_map;
+    tile_map.init(lvlSize, "tile.png", "Poppins-Regular.ttf", 0.15);
+    if (!tile_map.load(sf::Vector2u(64, 64), tile_map.getTiles(), lvlSize, lvlSize, sf::Vector2f(0.f, 100.f)))
+    {
+        cout << "asdewq" << endl;
+    }
 
     while (window.isOpen())
     {

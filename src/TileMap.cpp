@@ -18,54 +18,34 @@ Tile::Tile()
     bombsAround = 0;
 }
 
-//public
-TileMap::TileMap(unsigned int lvlSize, sf::Texture tTexture)
+////public
+
+void TileMap::init(unsigned int lvlSize, const string& m_tileset, const string& m_font, float difficulty)
 {
+    this->lvlSize = lvlSize;
     Tile mT;
     vector<Tile> row(lvlSize, mT);
     tiles = vector<vector<Tile>>(lvlSize, row);
 
-    numOfBombs = ceil(lvlSize * lvlSize * 0.15);
-    this->lvlSize = lvlSize;
-    tileTexture = tTexture;
+    //creating bombs and placing them on the map
+    numOfBombs = ceil(lvlSize * lvlSize * abs(difficulty));
+    createBombs(numOfBombs);
 
-    if (!tileFont.loadFromFile("Poppins-Regular.ttf"))
+    if (!tileset.loadFromFile(m_tileset))
+    {
+        std::cout << "Texture loading error" << std::endl;
+    }
+    if (!tileFont.loadFromFile(m_font))
     {
         cout << "FONT ERROR" << endl;
     }
 }
 
-void TileMap::createBombs(int nBombs)
+bool TileMap::load(sf::Vector2u tileSize, vector <vector<Tile>> new_tiles, unsigned int width, unsigned int height, sf::Vector2f startingPos)
 {
-    srand(time(NULL));
-    bombsPos.clear();
-    vector<int> possiblePlaces;
-    for (int i = 0; i < lvlSize * lvlSize; i++)
-    {
-        possiblePlaces.push_back(i);
-    }
-        
-    while (nBombs > 0)
-    {
-        int x = rand() % possiblePlaces.size();
-        if (possiblePlaces[x] == 0) 
-            continue;
-
-        cout << x << ": " << x % lvlSize << ", " << x / lvlSize << endl;
-        bombsPos.push_back(x);
-        tiles[x % lvlSize][x / lvlSize].isBomb = true;
-        possiblePlaces[x] = 0;
-        nBombs--;
-    }
-
-    setTilesNumbers();
-}
-
-bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize, vector <vector<Tile>> new_tiles,
-    unsigned int width, unsigned int height, sf::Vector2f startingPos/* = sf::Vector2f(0.f, 0.f)*/)
-{
-    // load the tileset texture
-    if (!m_tileset.loadFromFile(tileset))
+    // even tho this is never used it needs, for now, to be here 
+    // or id doesn't work
+    if (!m_tileset.loadFromFile("tile.png"))
         return false;
 
     // resize the vertex array to fit the level size
@@ -80,8 +60,8 @@ bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize, vector <ve
             int tileNumber = new_tiles[i][j].textureStatus;
 
             // find its position in the tileset texture
-            int tu = tileNumber % (m_tileset.getSize().x / tileSize.x);
-            int tv = tileNumber / (m_tileset.getSize().x / tileSize.x);
+            int tu = tileNumber % (tileset.getSize().x / tileSize.x);
+            int tv = tileNumber / (tileset.getSize().x / tileSize.x);
 
             // get a pointer to the triangles' vertices of the current tile
             sf::Vertex* triangles = &m_vertices[(i + j * width) * 6];
@@ -195,7 +175,7 @@ void TileMap::input(sf::Vector2i mousePos)
             }
         }
     }
-    load("tile.png", sf::Vector2u(64, 64), tiles, lvlSize, lvlSize, sf::Vector2f(0.f, 100.f));
+    load(sf::Vector2u(64, 64), tiles, lvlSize, lvlSize, sf::Vector2f(0.f, 100.f));
         
 }
 
@@ -219,6 +199,32 @@ void TileMap::drawText(sf::RenderWindow& window)
 }
 
 //private
+void TileMap::createBombs(int nBombs)
+{
+    srand(time(NULL));
+    bombsPos.clear();
+    vector<int> possiblePlaces;
+    for (int i = 0; i < lvlSize * lvlSize; i++)
+    {
+        possiblePlaces.push_back(i);
+    }
+
+    while (nBombs > 0)
+    {
+        int x = rand() % possiblePlaces.size();
+        if (possiblePlaces[x] == 0)
+            continue;
+
+        //cout << x << ": " << x % lvlSize << ", " << x / lvlSize << endl;
+        bombsPos.push_back(x);
+        tiles[x % lvlSize][x / lvlSize].isBomb = true;
+        possiblePlaces[x] = 0;
+        nBombs--;
+    }
+
+    setTilesNumbers();
+}
+
 void TileMap::setTilesNumbers()
 {
     //calculates tiles around each bomb

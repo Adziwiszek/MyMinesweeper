@@ -28,15 +28,16 @@ public:
 class TileMap : public sf::Drawable, sf::Transformable
 {
 public:
-    //TileMap();
-    TileMap(unsigned int lvlSize, sf::Texture tTexture);
+
+    //initialization of the map
+    //difficulty - % of map that will be a bomb (eg: 10x10 map with difficulty = 0.15 will have 15 bombs)
+    void init(unsigned int lvlSize, const string& m_tileset, const string& m_font, float difficulty);
     
     //clears any already existing bombs and populates map with new ones
     void createBombs(int nBombs);
 
     //loads map and setups it
-    bool load(const std::string& tileset, sf::Vector2u tileSize, vector <vector<Tile>> new_tiles,
-        unsigned int width, unsigned int height, sf::Vector2f startingPos/* = sf::Vector2f(0.f, 0.f)*/);
+    bool load(sf::Vector2u tileSize, vector <vector<Tile>> new_tiles, unsigned int width, unsigned int height, sf::Vector2f startingPos);
 
     void uncoverWholeMap();
 
@@ -51,8 +52,10 @@ public:
 
     vector<vector<Tile>> tiles;
 private:
+   
+
+    //calculates number of bombs around each tile
     void setTilesNumbers();
-    void uncoverTiles() {};
     sf::Color getTileColor(int nBombs);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -62,7 +65,7 @@ private:
     vector<int> bombsPos;
     int numOfBombs;
     unsigned int lvlSize;
-    sf::Texture tileTexture;
+    sf::Texture tileset;
     sf::Font tileFont;
 };
 
