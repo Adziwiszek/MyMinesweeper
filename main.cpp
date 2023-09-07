@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include "TileMap.h"
+#include "UI.h"
 
 using namespace std;
 
