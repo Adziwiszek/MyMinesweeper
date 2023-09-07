@@ -13,6 +13,8 @@ int main()
     sf::RenderWindow window(sf::VideoMode(640, 740), "Minesweeper");
 
     bool leftMousePressed = false;
+    bool rightMousePressed = false;
+    cout << sf::Mouse::Left << endl;
 
     //setting up tile map
     const int lvlSize = 10;
@@ -33,13 +35,24 @@ int main()
                 window.close();
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !leftMousePressed)
             {
-                tile_map.input(sf::Mouse::getPosition(window));
+                tile_map.input(sf::Mouse::getPosition(window), sf::Mouse::Left);
                 cout << "LEFT MOUSE PRESSED" << endl;
                 leftMousePressed = true;
             }
             else if(!sf::Mouse::isButtonPressed(sf::Mouse::Left) && leftMousePressed)
             {
                 leftMousePressed = false;
+            }
+
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && !rightMousePressed)
+            {
+                tile_map.input(sf::Mouse::getPosition(window), sf::Mouse::Right);
+                cout << "RIGHT MOUSE PRESSED" << endl;
+                rightMousePressed = true;
+            }
+            else if (!sf::Mouse::isButtonPressed(sf::Mouse::Right) && rightMousePressed)
+            {
+                rightMousePressed = false;
             }
         }
 

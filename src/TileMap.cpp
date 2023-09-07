@@ -143,7 +143,7 @@ void TileMap::uncoverMapAfterClick(sf::Vector2f clickedTile)
     }
 }
 
-void TileMap::input(sf::Vector2i mousePos)
+void TileMap::input(sf::Vector2i mousePos, sf::Mouse::Button buttonPressed)
 {
     auto mouseIsInTile = [](sf::Vector2i mPos, sf::Vector2f tPos, float len) -> bool
     {
@@ -163,15 +163,24 @@ void TileMap::input(sf::Vector2i mousePos)
         {
             if (mouseIsInTile(mousePos, sf::Vector2f(j*64, i*64 + 100), 64))
             {
-                if (tiles[j][i].isBomb)
+                //LEFT mouse button
+                if (buttonPressed == sf::Mouse::Left)
                 {
-                    tiles[j][i].textureStatus = 2;
+                    if (tiles[j][i].isBomb)
+                    {
+                        tiles[j][i].textureStatus = 2;
+                    }
+                    else
+                    {
+                        std::cout << "BOMBS AROUND: " << tiles[j][i].bombsAround << std::endl;
+                        tiles[j][i].textureStatus = 1;
+                        uncoverMapAfterClick(sf::Vector2f(j, i));
+                    }
                 }
-                else
+                //RIGHT mouse button
+                if (buttonPressed == sf::Mouse::Right)
                 {
-                    std::cout << "BOMBS AROUND: " << tiles[j][i].bombsAround << std::endl;
-                    tiles[j][i].textureStatus = 1;
-                    uncoverMapAfterClick(sf::Vector2f(j, i));
+
                 }
             }
         }

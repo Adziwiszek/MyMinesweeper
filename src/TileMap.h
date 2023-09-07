@@ -44,7 +44,7 @@ public:
     void uncoverMapAfterClick(sf::Vector2f clickedTile);
 
     //dealing with user input
-    void input(sf::Vector2i mousePos);
+    void input(sf::Vector2i mousePos, sf::Mouse::Button buttonPressed);
 
     vector <vector<Tile>> getTiles();
 
