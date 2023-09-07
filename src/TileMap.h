@@ -15,10 +15,12 @@ public:
     Tile();
     bool isCovered;
     bool isBomb;
+    bool isFlagged;
     // textureStatus:
     // 0 - covered 
     // 1 - uncovered
     // 2 - bomb
+    // 3 - red flag
     int textureStatus;
     unsigned int bombsAround;
     sf::Text numOfBombsAroundText;

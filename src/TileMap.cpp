@@ -14,6 +14,7 @@ Tile::Tile()
 {
     isCovered = true;
     isBomb = false;
+    isFlagged = false;
     textureStatus = 0;
     bombsAround = 0;
 }
@@ -164,23 +165,36 @@ void TileMap::input(sf::Vector2i mousePos, sf::Mouse::Button buttonPressed)
             if (mouseIsInTile(mousePos, sf::Vector2f(j*64, i*64 + 100), 64))
             {
                 //LEFT mouse button
-                if (buttonPressed == sf::Mouse::Left)
+                if (buttonPressed == sf::Mouse::Left && !tiles[j][i].isFlagged)
                 {
                     if (tiles[j][i].isBomb)
                     {
                         tiles[j][i].textureStatus = 2;
+                        tiles[j][i].isCovered = false;
                     }
                     else
                     {
                         std::cout << "BOMBS AROUND: " << tiles[j][i].bombsAround << std::endl;
                         tiles[j][i].textureStatus = 1;
+                        tiles[j][i].isCovered = false;
                         uncoverMapAfterClick(sf::Vector2f(j, i));
                     }
                 }
                 //RIGHT mouse button
                 if (buttonPressed == sf::Mouse::Right)
                 {
-
+                    cout << tiles[j][i].isFlagged <<" -> ";
+                    if (tiles[j][i].isCovered && !tiles[j][i].isFlagged)
+                    {
+                        tiles[j][i].isFlagged = true;
+                        tiles[j][i].textureStatus = 3;
+                    }
+                    else if (tiles[j][i].isFlagged && tiles[j][i].isCovered)
+                    {
+                        tiles[j][i].isFlagged = false;
+                        tiles[j][i].textureStatus = 0;
+                    }
+                    cout << tiles[j][i].isFlagged << endl;
                 }
             }
         }
