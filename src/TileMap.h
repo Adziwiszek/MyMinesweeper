@@ -64,6 +64,8 @@ private:
     
     vector<int> bombsPos;
     int numOfBombs;
+    int uncoveredBombs;
+
     unsigned int lvlSize;
     sf::Texture tileset;
     sf::Font tileFont;

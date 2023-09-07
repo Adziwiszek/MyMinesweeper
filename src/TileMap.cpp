@@ -30,6 +30,7 @@ void TileMap::init(unsigned int lvlSize, const string& m_tileset, const string& 
     //creating bombs and placing them on the map
     numOfBombs = ceil(lvlSize * lvlSize * abs(difficulty));
     createBombs(numOfBombs);
+    uncoveredBombs = 0;
 
     if (!tileset.loadFromFile(m_tileset))
     {
