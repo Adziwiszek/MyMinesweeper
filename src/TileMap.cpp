@@ -30,6 +30,7 @@ void TileMap::init(unsigned int lvlSize, const string& m_tileset, const string& 
 
     //creating bombs and placing them on the map
     numOfBombs = ceil(lvlSize * lvlSize * abs(difficulty));
+    cout << numOfBombs << endl;
     createBombs(numOfBombs);
     uncoveredBombs = 0;
 
@@ -171,6 +172,7 @@ void TileMap::input(sf::Vector2i mousePos, sf::Mouse::Button buttonPressed)
                     {
                         tiles[j][i].textureStatus = 2;
                         tiles[j][i].isCovered = false;
+                        stateOfGame = lost;
                     }
                     else
                     {
@@ -184,15 +186,23 @@ void TileMap::input(sf::Vector2i mousePos, sf::Mouse::Button buttonPressed)
                 if (buttonPressed == sf::Mouse::Right)
                 {
                     cout << tiles[j][i].isFlagged <<" -> ";
-                    if (tiles[j][i].isCovered && !tiles[j][i].isFlagged)
+                    if (tiles[j][i].isCovered && !tiles[j][i].isFlagged)    // covering a tile
                     {
                         tiles[j][i].isFlagged = true;
                         tiles[j][i].textureStatus = 3;
+                        if (tiles[j][i].isBomb)
+                        {
+                            uncoveredBombs++;
+                        }
                     }
-                    else if (tiles[j][i].isFlagged && tiles[j][i].isCovered)
+                    else if (tiles[j][i].isFlagged && tiles[j][i].isCovered)// uncovering a tile
                     {
                         tiles[j][i].isFlagged = false;
                         tiles[j][i].textureStatus = 0;
+                        if (tiles[j][i].isBomb)
+                        {
+                            uncoveredBombs--;
+                        }
                     }
                     cout << tiles[j][i].isFlagged << endl;
                 }
@@ -200,7 +210,10 @@ void TileMap::input(sf::Vector2i mousePos, sf::Mouse::Button buttonPressed)
         }
     }
     load(sf::Vector2u(64, 64), tiles, lvlSize, lvlSize, sf::Vector2f(0.f, 100.f));
-        
+    if (uncoveredBombs = numOfBombs & uncoveredBombs != 0)
+    {
+        stateOfGame = won;
+    }
 }
 
 vector <vector<Tile>> TileMap::getTiles()
@@ -239,7 +252,6 @@ void TileMap::createBombs(int nBombs)
         if (possiblePlaces[x] == 0)
             continue;
 
-        //cout << x << ": " << x % lvlSize << ", " << x / lvlSize << endl;
         bombsPos.push_back(x);
         tiles[x % lvlSize][x / lvlSize].isBomb = true;
         possiblePlaces[x] = 0;

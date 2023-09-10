@@ -30,6 +30,15 @@ public:
 class TileMap : public sf::Drawable, sf::Transformable
 {
 public:
+    enum gameStates
+    {
+        won = 1,
+        stillPlaying = 0,
+        lost = -1
+    };
+
+    //using gameStates for this
+    gameStates stateOfGame;
 
     //initialization of the map
     //difficulty - % of map that will be a bomb (eg: 10x10 map with difficulty = 0.15 will have 15 bombs)
@@ -53,6 +62,7 @@ public:
     void drawText(sf::RenderWindow& window);
 
     vector<vector<Tile>> tiles;
+    
 private:
    
 
@@ -67,6 +77,7 @@ private:
     vector<int> bombsPos;
     int numOfBombs;
     int uncoveredBombs;
+    
 
     unsigned int lvlSize;
     sf::Texture tileset;

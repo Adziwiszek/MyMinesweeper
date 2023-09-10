@@ -19,7 +19,7 @@ int main()
     //setting up tile map
     const int lvlSize = 10;
     TileMap tile_map;
-    tile_map.init(lvlSize, "tile.png", "Poppins-Regular.ttf", 0.15);
+    tile_map.init(lvlSize, "tile.png", "Poppins-Regular.ttf", 0.10);
     if (!tile_map.load(sf::Vector2u(64, 64), tile_map.getTiles(), lvlSize, lvlSize, sf::Vector2f(0.f, 100.f)))
     {
         cout << "asdewq" << endl;
@@ -27,6 +27,17 @@ int main()
 
     while (window.isOpen())
     {
+        if (tile_map.stateOfGame == tile_map.lost)
+        {
+            cout << "YOU LOST!!!" << endl;
+            break;            
+        }
+        else if (tile_map.stateOfGame == tile_map.won)
+        {
+            cout << "YOU WON!!!" << endl;
+            break;          
+        }
+
         //handling input
         sf::Event event;
         while (window.pollEvent(event))
